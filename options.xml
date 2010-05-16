@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!DOCTYPE data SYSTEM "http://www.woltlab.com/DTDs/options.dtd">
+<data>
+	<import>
+		<categories>
+			<category name="cpvhostcontainer.containerApache2">
+				<parent>cpvhostcontainer</parent>
+				<permissions>admin.cp.canEditVhostContainer</permissions>
+			</category>
+		</categories>
+		
+		<options>
+			<option name="apache2_create_paths">
+		        	<categoryname>cp.backendpaths.createpaths</categoryname>
+					<optiontype>textarea</optiontype>
+		        	<defaultvalue>d:{HOMEDIR}/webalizer:0555:{GUID}.{GUID}
+d:{HOMEDIR}/logfiles:0750:{APACHE2USER}.{GUID}
+l:{APACHE2LOGPATH}/{USERNAME}->{HOMEDIR}/logfiles:0777:{APACHE2USER}.{APACHE2USER}
+</defaultvalue>
+		    	</option>
+		
+			<option name="containerApache2vhostpath">
+				<categoryname>cpvhostcontainer.containerApache2</categoryname>
+				<optiontype>text</optiontype>
+				<defaultvalue>/etc/apache2/sites-enabled</defaultvalue>
+				<permissions>admin.cp.canEditVhostContainer</permissions>
+			</option> 
+			
+			<option name="containerApache2fileprefix">
+				<categoryname>cpvhostcontainer.containerApache2</categoryname>
+				<optiontype>text</optiontype>
+				<defaultvalue>20_webcp_normal_vhost</defaultvalue>
+				<permissions>admin.cp.canEditVhostContainer</permissions>
+			</option> 
+			
+			<option name="containerApache2template">
+				<categoryname>cpvhostcontainer.containerApache2</categoryname>
+				<optiontype>textarea</optiontype>
+				<defaultvalue><![CDATA[<VirtualHost $ipAddress:$port>
+  #if $addServerName
+  ServerName $domainname
+  #end if
+  #if $wwwServerAlias
+  ServerAlias www.$domainname
+  #end if
+  
+  #if $isWildcardDomain
+  ServerAlias *.$domainname
+  #end if
+  
+  ServerAdmin webmaster@$domainname
+  
+  SuexecUserGroup $username $username
+  
+  DocumentRoot "$documentroot"
+  
+  Alias /webalizer "$homeDir/webalizer/$domainname"
+  
+  ErrorLog "$logpath.error"
+  CustomLog "$logpath.access" combined
+  
+  #if $isSSL
+  <IfModule mod_ssl.c>
+      SSLEngine on
+      SSLCipherSuite ALL:!ADH:!EXP56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+      SSLCertificateFile $sslCertFile
+      SSLCertificateKeyFile $sslCertKeyFile
+      SSLCertificateChainFile $sslCertChainFile
+
+      <Files ~ "\.(cgi|shtml)$">
+        SSLOptions +StdEnvVars
+      </Files>
+
+      SetEnvIf User-Agent ".*MSIE.*" nokeepalive ssl_unclean-shutdown
+ </IfModule>
+ #end if
+ 
+ # vhostTemplate
+ $vhostTemplate 
+ 
+ # specialSettings
+ $specialSettings
+</VirtualHost>]]></defaultvalue>
+				<permissions>admin.cp.canEditVhostContainer</permissions>
+			</option> 
+
+		</options>
+		
+		<option name="containerApache2reloadcommand">
+			<categoryname>cpvhostcontainer.containerApache2</categoryname>
+			<optiontype>text</optiontype>
+			<defaultvalue>/etc/init.d/apache2 restart</defaultvalue>
+			<permissions>admin.cp.canEditVhostContainer</permissions>
+		</option>
+		
+		<option name="containerApache2logerror">
+			<categoryname>cpvhostcontainer.containerApache2</categoryname>
+			<optiontype>text</optiontype>
+			<defaultvalue>/var/log/webcp/{username}/{domainname}-error.log</defaultvalue>
+			<permissions>admin.cp.canEditVhostContainer</permissions>
+		</option>
+		
+		<option name="containerApache2logaccess">
+			<categoryname>cpvhostcontainer.containerApache2</categoryname>
+			<optiontype>text</optiontype>
+			<defaultvalue>/var/log/webcp/{username}/{domainname}-access.log</defaultvalue>
+			<permissions>admin.cp.canEditVhostContainer</permissions>
+		</option>
+		
+		<option name="containerApache2user">
+			<categoryname>cpvhostcontainer.containerApache2</categoryname>
+			<optiontype>text</optiontype>
+			<defaultvalue>www-data</defaultvalue>
+			<permissions>admin.cp.canEditVhostContainer</permissions>
+		</option>
+		
+	</import>
+</data>
